@@ -142,18 +142,18 @@ class matrix:
 
 def kalman_filter(x, P):
     for n in range(len(measurements)):      
-        
+
         # measurement update        
-        y = measurements[n].__sub__(H.__mul__(x))
-        s = H.__mul__(P.__mul__(H.transpose())).__add__(R)
-        K = P.__mul__(H.transpose().__mul__(s.transpose()))
+        y = matrix([[measurements[n]]]).__sub__(H.__mul__(x))        
+        s = H.__mul__(P).__mul__(H.transpose()).__add__(R)
+        K = P.__mul__(H.transpose()).__mul__(s.inverse())
         x = x.__add__(K.__mul__(y))
         P = (I.__sub__(K.__mul__(H))).__mul__(P)
 
         # prediction
         x = F.__mul__(x).__add__(u)
         P = F.__mul__(P.__mul__(F.transpose()))
-        
+
     return x,P
 
 ############################################
@@ -161,7 +161,6 @@ def kalman_filter(x, P):
 ############################################
 
 measurements = [1, 2, 3]
-
 x = matrix([[0.], [0.]]) # initial state (location and velocity)
 P = matrix([[1000., 0.], [0., 1000.]]) # initial uncertainty
 u = matrix([[0.], [0.]]) # external motion
